@@ -4,11 +4,9 @@ public class RotateCamera : MonoBehaviour
 {
   public float rotationSpeed;
 
-  // Update is called once per frame
   void Update()
   {
     RotateCameraInput();
-
   }
   private void RotateCameraInput()
   {
