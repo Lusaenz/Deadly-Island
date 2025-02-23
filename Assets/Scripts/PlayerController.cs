@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
   public bool hasPowerup;
   private float powerupStrength = 30.0f;
   public GameObject powerupIndicator;
+  public AudioClip damageSound;
+  public AudioClip powerupSound;
+
   void Start()
   {
     playerRb = GetComponent<Rigidbody>();
@@ -51,6 +54,11 @@ public class PlayerController : MonoBehaviour
       // Si no se mueve, frenar el movimiento para evitar deslizamiento
       playerRb.velocity = new Vector3(0, playerRb.velocity.y, 0);
     }
+    if (Input.GetKeyDown(KeyCode.Escape))
+    {
+      GameManager.Instance.PauseGame();
+      Debug.Log("pausa");
+    }
   }
 
   private void OnTriggerEnter(Collider other)
@@ -60,6 +68,8 @@ public class PlayerController : MonoBehaviour
       hasPowerup = true;
       powerupIndicator.gameObject.SetActive(true);
       Destroy(other.gameObject);
+      AudioManager.Instance.PlayPowerupSFX(powerupSound);
+
       StartCoroutine(PowerupCountdownRoutine());
     }
   }
@@ -72,12 +82,17 @@ public class PlayerController : MonoBehaviour
 
   private void OnCollisionEnter(Collision collision)
   {
-    if (collision.gameObject.CompareTag("Enemy") && hasPowerup)
+    if (collision.gameObject.CompareTag("Enemy"))
     {
-      Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-      Vector3 awayFromPlayer = collision.gameObject.transform.position - transform.position;
-      awayFromPlayer.Normalize();
-      enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+      AudioManager.Instance.PlayOneShot(damageSound); // ✅ Sonido cuando el enemigo choca con el jugador
+
+      if (hasPowerup)
+      {
+        Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+        Vector3 awayFromPlayer = collision.gameObject.transform.position - transform.position;
+        awayFromPlayer.Normalize();
+        enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+      }
     }
   }
 }
