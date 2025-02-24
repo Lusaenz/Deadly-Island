@@ -8,7 +8,8 @@ public class AudioManager : MonoBehaviour
   [SerializeField] AudioSource sfxAudio, musicAudio, powerupAudio;
   public AudioClip initialMusic;
   [SerializeField] AudioMixer master;
-  [Range (-5,5)]
+  [Range(-5, 5)]
+  bool isMute;
 
   public float musicVolume, sfxVolume, powerupVolume;
 
@@ -33,7 +34,7 @@ public class AudioManager : MonoBehaviour
     powerupAudio = transform.GetChild(2).GetComponent<AudioSource>();
     InitialPlayMusic(initialMusic);
   }
-  void Update ()
+  void Update()
   {
     MusicVolumeControl(musicVolume);
     SfxVolumeControl(sfxVolume);
@@ -67,6 +68,18 @@ public class AudioManager : MonoBehaviour
   public void PowerupVolumeControl(float volume)
   {
     master.SetFloat("Powerup", volume);
+  }
+  public void MuteAll()
+  {
+    isMute = !isMute;
+    if (isMute)
+    {
+      master.SetFloat("Master", -80f);
+    }
+    else
+    {
+      master.SetFloat("Master", 0f);
+    }
   }
 }
 
