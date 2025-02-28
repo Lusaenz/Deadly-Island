@@ -49,7 +49,7 @@ Si deseas contribuir, puedes enviar un **pull request** con mejoras o sugerencia
 
 ## Autor
 
-**Luisa Saenz**
+**LuSaenz**
 
 ## Licencia
 
